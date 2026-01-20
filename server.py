@@ -24,10 +24,25 @@ clubs = loadClubs()
 def index():
     return render_template('index.html')
 
-@app.route('/showSummary',methods=['POST'])
+@app.route('/showSummary', methods=['POST'])
 def showSummary():
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
-    return render_template('welcome.html',club=club,competitions=competitions)
+    """
+    Affiche le résumé pour un club connecté
+    Gère le cas où l'email n'existe pas (bug critique corrigé)
+    """
+    email = request.form.get('email', '')
+    
+    # Chercher le club avec cet email
+    club_list = [c for c in clubs if c['email'] == email]
+    
+    # Vérifier si le club existe
+    if not club_list:
+        flash("Désolé, cette adresse email est introuvable. Veuillez réessayer.")
+        return render_template('index.html')
+    
+    # Club trouvé
+    club = club_list[0]
+    return render_template('welcome.html', club=club, competitions=competitions)
 
 
 @app.route('/book/<competition>/<club>')
