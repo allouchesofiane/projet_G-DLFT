@@ -90,3 +90,18 @@
   - Accessible sans connexion
   - Affiche tous les clubs
   - Affiche points actualisés
+
+### Plan de correction
+
+# Ordre de traitement
+1. **Bug 1** (critique) : Email inexistant → Bloque l'utilisation
+2. **Bug 2** : Points non déduits → Fonctionnalité majeure
+3. **Bug 3** : Compétitions passées → Logique métier
+4. **Bug 4** : Limite 12 places → Règle métier
+5. **Bug 5** : Overspending → Règle métier
+6. **Bug 6** : Sur-réservation → Intégrité des données
+7. **Phase 2** : Tableau public → Nouvelle fonctionnalité
+
+## Approche
+- 1 branche par bug
+- Merge dans main après chaque correction
