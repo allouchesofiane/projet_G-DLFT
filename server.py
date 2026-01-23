@@ -1,5 +1,6 @@
 import json
 from flask import Flask,render_template,request,redirect,flash,url_for
+from datetime import datetime
 
 def save_clubs(clubs_data):
     """Sauvegarde les données des clubs dans clubs.json"""
@@ -56,16 +57,24 @@ def book(competition,club):
     if foundClub and foundCompetition:
         return render_template('booking.html',club=foundClub,competition=foundCompetition)
     else:
-        flash("Something went wrong-please try again")
+        flash("Une erreur s’est produite. Réessayez.")
         return render_template('welcome.html', club=club, competitions=competitions)
 
 
 @app.route('/purchasePlaces',methods=['POST'])
 def purchasePlaces():
+    
     # Achete les places pour une compétition
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
+    
+    # Vérifier que la compétition est dans le futur
+    competition_date = datetime.strptime(competition['date'], '%Y-%m-%d %H:%M:%S')
+    if competition_date < datetime.now():
+        flash('Impossible de réserver une compétition passée.')
+        return render_template('welcome.html', club=club, competitions=competitions)
+    
     # Deduire les places de la compétition
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
     # Déduire les points du club
@@ -74,7 +83,7 @@ def purchasePlaces():
     # Sauvegarder les modifications dans clubs.json
     save_clubs(clubs)
     
-    flash(f'Great! {placesRequired} places booked for {competition["name"]}')
+    flash(f"{placesRequired} places ont été réservées avec succès pour {competition['name']}.")
     return render_template('welcome.html', club=club, competitions=competitions)
 
 

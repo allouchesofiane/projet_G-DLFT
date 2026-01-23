@@ -1,8 +1,3 @@
-"""
-Bug 2 : Réservation possible pour une compétition passée
-Objectif : Refuser la réservation si la date est dans le passé
-"""
-
 
 def test_cannot_book_past_competition(client):
     """
