@@ -1,6 +1,10 @@
 import json
 from flask import Flask,render_template,request,redirect,flash,url_for
 
+def save_clubs(clubs_data):
+    """Sauvegarde les données des clubs dans clubs.json"""
+    with open('clubs.json', 'w') as f:
+        json.dump({'clubs': clubs_data}, f, indent=4)
 
 def loadClubs():
     with open('clubs.json') as c:
@@ -58,11 +62,19 @@ def book(competition,club):
 
 @app.route('/purchasePlaces',methods=['POST'])
 def purchasePlaces():
+    # Achete les places pour une compétition
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
+    # Deduire les places de la compétition
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    flash('Great-booking complete!')
+    # Déduire les points du club
+    club['points'] = str(int(club['points']) - placesRequired)
+    
+    # Sauvegarder les modifications dans clubs.json
+    save_clubs(clubs)
+    
+    flash(f'Great! {placesRequired} places booked for {competition["name"]}')
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
