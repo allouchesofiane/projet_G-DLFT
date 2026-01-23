@@ -75,6 +75,11 @@ def purchasePlaces():
         flash('Impossible de réserver une compétition passée.')
         return render_template('welcome.html', club=club, competitions=competitions)
     
+    # Vérifier limite de 12 places par compétition
+    if placesRequired > 12:
+        flash('Limite de 12 places par compétition dépassée.')
+        return render_template('welcome.html', club=club, competitions=competitions)
+    
     # Deduire les places de la compétition
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
     # Déduire les points du club

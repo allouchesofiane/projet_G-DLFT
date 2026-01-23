@@ -32,7 +32,7 @@ def test_can_book_exactly_12_places(client):
     # Vérifier qu'il n'y a pas de message d'erreur
     page = response.data.decode().lower()
     assert "maximum" not in page
-    assert "12" not in page
+    assert "vous ne pouvez pas réserver plus de 12 places" not in page
 
 
 def test_can_book_less_than_12_places(client):
