@@ -49,3 +49,16 @@ def clubs():
 def competitions():
     """Fixture pour charger les compétitions"""
     return loadCompetitions()
+
+
+@pytest.fixture(autouse=True)
+def restore_clubs_file():
+    # Sauvegarde avant test
+    with open("clubs.json", "r", encoding="utf-8") as f:
+        original = f.read()
+
+    yield
+
+    # Restauration après test
+    with open("clubs.json", "w", encoding="utf-8") as f:
+        f.write(original)
