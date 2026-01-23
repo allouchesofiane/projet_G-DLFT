@@ -8,7 +8,7 @@ def test_cannot_overspend_points(client):
     response = client.post("/purchasePlaces", data={
         "club": "Iron Temple",
         "competition": "Spring Festival",
-        "places": "3"
+        "places": "5"
     })
 
     assert response.status_code == 200
