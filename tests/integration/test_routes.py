@@ -58,10 +58,11 @@ def test_purchase_places_success(client):
 
 def test_purchase_places_insufficient_points(client):
     """Test réservation sans points suffisants"""
+
     response = client.post('/purchasePlaces', data={
-        'club': 'She Lifts',
+        'club': 'Iron Temple',          
         'competition': 'Spring Festival',
-        'places': '15'
+        'places': '5'                 
     })
 
     assert response.status_code == 200
