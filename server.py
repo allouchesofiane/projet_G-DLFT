@@ -106,7 +106,16 @@ def purchasePlaces():
 
 
 # TODO: Add route for points display
-
+@app.route('/points')
+def display_points():
+    """
+    Affiche le tableau public des points de tous les clubs
+    Phase 2 : Accessible sans connexion
+    """
+    clubs = loadClubs()
+    # Trier par points décroissants pour meilleure lisibilité
+    clubs_sorted = sorted(clubs, key=lambda x: int(x['points']), reverse=True)
+    return render_template('points.html', clubs=clubs_sorted)
 
 @app.route('/logout')
 def logout():
