@@ -33,7 +33,7 @@ def index():
 def showSummary():
     """
     Affiche le résumé pour un club connecté
-    Gère le cas où l'email n'existe pas (bug critique corrigé)
+    Gère le cas où l'email n'existe pas
     """
     email = request.form.get('email', '')
     
