@@ -38,7 +38,7 @@ def test_public_board_is_read_only(client):
     response = client.get('/points')
     
     assert response.status_code == 200
-    page = response.data.decode.lower()
+    page = response.data.decode(("utf-8")).lower()
     assert 'type="number"' not in page
 
 def test_public_board_has_link_to_home(client):
