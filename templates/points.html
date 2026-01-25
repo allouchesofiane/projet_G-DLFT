@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Club Points Board</title>
+</head>
+<body>
+
+    <h1>Club Points Board</h1>
+    <p>Current points available for all clubs</p>
+
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Club Name</th>
+                <th>Email</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for club in clubs %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ club.name }}</td>
+                <td>{{ club.email }}</td>
+                <td>{{ club.points }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p>
+        <a href="/">page de connexion </a>
+    </p>
+
+</body>
+</html>
