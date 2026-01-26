@@ -1,51 +1,190 @@
-# gudlift-registration
+# GÜDLFT Registration Platform
 
-1. Why
+##  Description
+Application légère de réservation pour compétitions de force (deadlifting, strongman) destinée aux organisateurs régionaux.
 
+Permet aux secrétaires de clubs d'inscrire des athlètes aux compétitions en utilisant un système de points.
 
-    This is a proof of concept (POC) project to show a light-weight version of our competition booking platform. The aim is the keep things as light as possible, and use feedback from the users to iterate.
+##  Fonctionnalités
 
-2. Getting Started
+### Phase 1
+-  Connexion par email (secrétaires de clubs)
+-  Affichage des compétitions à venir
+-  Réservation de places avec système de points (1 point = 1 place)
+-  Déduction automatique des points
+-  Limite de 12 places max par compétition et par club
+-  Validation : points suffisants + compétitions futures uniquement
+-  Messages de confirmation et d'erreur
 
-    This project uses the following technologies:
+### Phase 2
+-  Tableau public des points de tous les clubs
+-  Accessible sans connexion
+-  Lecture seule
+-  Tri par points décroissants
 
-    * Python v3.x+
+##  Bugs corrigés
+1.  **Email inexistant fait planter l'app** (bug critique ligne 29)
+2.  **Points non déduits** après réservation
+3.  **Réservation pour compétitions passées** possible
+4.  **Pas de limite à 12 places** par compétition
+5.  **Overspending de points** possible
 
-    * [Flask](https://flask.palletsprojects.com/en/1.1.x/)
+##  Installation
 
-        Whereas Django does a lot of things for us out of the box, Flask allows us to add only what we need. 
-     
+### Prérequis
+- Python 3.8+
+- pip
 
-    * [Virtual environment](https://virtualenv.pypa.io/en/stable/installation.html)
+### Étapes
 
-        This ensures you'll be able to install the correct packages without interfering with Python on your machine.
+1. **Cloner le repository**
+```bash
+git clone https://github.com/OpenClassrooms-Student-Center/Python_Testing.git
+cd Python_Testing
+```
 
-        Before you begin, please ensure you have this installed globally. 
+2. **Créer l'environnement virtuel**
+```bash
+python -m venv env
+```
 
+3. **Activer l'environnement virtuel**
+- Windows : `env\Scripts\activate`
+- macOS/Linux : `source env/bin/activate`
 
-3. Installation
+4. **Installer les dépendances**
+```bash
+pip install -r requirements.txt
+```
 
-    - After cloning, change into the directory and type <code>virtualenv .</code>. This will then set up a a virtual python environment within that directory.
+5. **Lancer l'application**
+```bash
+python server.py
+```
 
-    - Next, type <code>source bin/activate</code>. You should see that your command prompt has changed to the name of the folder. This means that you can install packages in here without affecting affecting files outside. To deactivate, type <code>deactivate</code>
+6. **Ouvrir dans le navigateur**
+```
+http://127.0.0.1:5000/
+```
 
-    - Rather than hunting around for the packages you need, you can install in one step. Type <code>pip install -r requirements.txt</code>. This will install all the packages listed in the respective file. If you install a package, make sure others know by updating the requirements.txt file. An easy way to do this is <code>pip freeze > requirements.txt</code>
+##  Tests
 
-    - Flask requires that you set an environmental variable to the python file. However you do that, you'll want to set the file to be <code>server.py</code>. Check [here](https://flask.palletsprojects.com/en/1.1.x/quickstart/#a-minimal-application) for more details
+### Lancer tous les tests
+```bash
+pytest
+```
 
-    - You should now be ready to test the application. In the directory, type either <code>flask run</code> or <code>python -m flask run</code>. The app should respond with an address you should be able to go to using your browser.
+### Avec rapport de couverture
+```bash
+pytest --cov=. --cov-report=html --cov-report=term
+```
 
-4. Current Setup
+### Tests par catégorie
+```bash
+# Tests unitaires
+pytest tests/unit/
 
-    The app is powered by [JSON files](https://www.tutorialspoint.com/json/json_quick_guide.htm). This is to get around having a DB until we actually need one. The main ones are:
-     
-    * competitions.json - list of competitions
-    * clubs.json - list of clubs with relevant information. You can look here to see what email addresses the app will accept for login.
+# Tests d'intégration
+pytest tests/integration/
 
-5. Testing
+# Tests fonctionnels
+pytest tests/functional/
+```
 
-    You are free to use whatever testing framework you like-the main thing is that you can show what tests you are using.
+### Couverture de code
+- **Couverture actuelle** : 72% ✅ (≥ 60% requis)
+- **Rapport HTML** : `htmlcov/index.html`
 
-    We also like to show how well we're testing, so there's a module called 
-    [coverage](https://coverage.readthedocs.io/en/coverage-5.1/) you should add to your project.
+### Tests de performance
+```bash
+# Lancer le serveur
+python server.py
 
+# Dans un autre terminal, lancer Locust
+locust
+
+# Ouvrir http://localhost:8089
+# Configuration : 6 utilisateurs, spawn rate 1/s
+```
+
+##  Structure du projet
+```
+Python_Testing/
+├── server.py                   # Application Flask principale
+├── clubs.json                  # Données des clubs
+├── competitions.json           # Données des compétitions
+├── templates/                  # Templates HTML
+│   ├── index.html             # Page d'accueil
+│   ├── welcome.html           # Liste compétitions
+│   ├── booking.html           # Formulaire réservation
+│   └── points.html            # Tableau public (Phase 2)
+├── tests/                      # Tests
+│   ├── unit/                  # Tests unitaires
+│   ├── integration/           # Tests d'intégration
+│   ├── functional/            # Tests fonctionnels
+│   └── conftest.py            # Fixtures pytest
+├── locustfile.py              # Tests de performance
+├── pytest.ini                 # Configuration pytest
+├── .coveragerc                # Configuration coverage
+├── requirements.txt           # Dépendances Python
+├── TEST_REPORT.md            # Rapport de tests
+├── PERFORMANCE_REPORT.md     # Rapport de performance
+├── BUGS.md                    # Suivi des bugs
+└── README.md                  # Ce fichier
+```
+
+##  Workflow Git
+
+### Nomenclature des branches
+- `main` : Branche principale (code stable)
+- `bug/*` : Correction de bugs (ex: `bug/email-not-found-crash`)
+- `feature/*` : Nouvelles fonctionnalités (ex: `feature/public-points-board`)
+- `qa` : Branche de révision (quality assurance)
+
+### Exemple
+```bash
+# Créer une branche pour un bug
+git checkout -b bug/nom-du-bug
+
+# Merger dans main si tests OK
+git checkout main
+git merge bug/nom-du-bug
+```
+
+##  Performance
+
+### Exigences
+-  Chargement liste compétitions : < 5 secondes
+-  Mise à jour points : < 2 secondes
+-  Tests avec 6 utilisateurs simultanés
+
+### Résultats
+Voir `PERFORMANCE_REPORT.md` pour les résultats détaillés.
+
+##  Règles métier
+
+1. **Système de points**
+   - 1 point = 1 place
+   - Les clubs gagnent des points en organisant des compétitions
+
+2. **Limitations**
+   - Maximum 12 places par club et par compétition
+   - Ne peut pas dépenser plus de points que disponible
+   - Ne peut pas réserver pour une compétition passée
+   - Ne peut pas réserver plus de places que disponibles
+
+3. **Accès**
+   - Seuls les secrétaires peuvent réserver (authentification par email)
+   - Tableau public accessible à tous sans connexion
+
+##  Documentation
+
+- **Tests** : [TEST_REPORT.md](./TEST_REPORT.md)
+- **Performance** : [PERFORMANCE_REPORT.md](./PERFORMANCE_REPORT.md)
+- **Bugs** : [BUGS.md](./BUGS.md)
+
+##  Auteur
+Sofiane ALLOUCHE
+
+##  Licence
+Ce projet est développé dans la cadre d'une formation avec OpenClassrooms

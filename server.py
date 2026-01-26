@@ -12,6 +12,10 @@ def loadClubs():
          listOfClubs = json.load(c)['clubs']
          return listOfClubs
 
+def save_competitions(competitions_data):
+    with open('competitions.json', 'w') as f:
+        json.dump({'competitions': competitions_data}, f, indent=4)
+
 
 def loadCompetitions():
     with open('competitions.json') as comps:
@@ -61,14 +65,15 @@ def book(competition,club):
         return render_template('welcome.html', club=club, competitions=competitions)
 
 
-@app.route('/purchasePlaces',methods=['POST'])
+@app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
-    
-    # Achete les places pour une compétition
+    clubs = loadClubs()
+    competitions = loadCompetitions()
+
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
-    
+
     # Vérifier que la compétition est dans le futur
     competition_date = datetime.strptime(competition['date'], '%Y-%m-%d %H:%M:%S')
     if competition_date < datetime.now():
@@ -106,7 +111,16 @@ def purchasePlaces():
 
 
 # TODO: Add route for points display
-
+@app.route('/points')
+def display_points():
+    """
+    Affiche le tableau public des points de tous les clubs
+    Phase 2 : Accessible sans connexion
+    """
+    clubs = loadClubs()
+    # Trier par points décroissants pour meilleure lisibilité
+    clubs_sorted = sorted(clubs, key=lambda x: int(x['points']), reverse=True)
+    return render_template('points.html', clubs=clubs_sorted)
 
 @app.route('/logout')
 def logout():
